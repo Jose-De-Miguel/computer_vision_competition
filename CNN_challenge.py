@@ -134,13 +134,29 @@ print("Total imágenes:", sum(num_imagest))
 data_images_train = []
 
 for i in range(len(file_list)):
+
     # Ruta completa de la imagen
     image_path = os.path.join(ruta_train, etiquetas_train[i], file_list[i])
 
+
     # Abrimos y convertimos a array
-    image_array = np.array(Image.open(image_path))
+
+
+
+    try:
+        with Image.open(image_path) as img:
+            img.verify()  # Solo comprueba, no carga toda la imagen
+            image_array = np.array(img)
+    
+    except Exception as e:
+        print("Error al verificar la imagen:", e)
+
+
+   
 
     data_images_train.append(image_array)
+
+
 
 print("Número total de arrays cargados:", len(data_images_train))
 
@@ -149,7 +165,7 @@ print("Número total de arrays cargados:", len(data_images_train))
 
 
 # Ruta principal del dataset
-ruta_test = "/content/vision_descomprimido/xview_recognition/xview_test"
+ruta_test = "./vision_descomprimido/xview_recognition/xview_test"
 
 # Obtener todas las clases (carpetas dentro de xview_train)
 clases = [nombre for nombre in os.listdir(ruta_test) if os.path.isdir(os.path.join(ruta_test, nombre))]
@@ -177,6 +193,8 @@ for clase in clases:
     etiquetas_test += aux
     file_list += aux1
 
+
+
 # ======================
 # Ahora cargamos las imágenes en arrays
 # ======================
@@ -187,8 +205,14 @@ for i in range(len(file_list)):
     # Ruta completa de la imagen
     image_path = os.path.join(ruta_test, etiquetas_test[i], file_list[i])
 
-    # Abrimos y convertimos a array
-    image_array = np.array(Image.open(image_path))
+
+    try:
+        with Image.open(image_path) as img:
+            img.verify()  # Solo comprueba, no carga toda la imagen
+            image_array = np.array(img)
+    
+    except Exception as e:
+        print("Error al verificar la imagen:", e)
 
     data_images_test.append(image_array)
 
@@ -211,7 +235,7 @@ imagenes_ordenadas = df_sorted['imagen'].tolist()
 etiquetas_ordenadas = df_sorted['etiqueta'].tolist()
 
 
-
+print("Ok 2")
 # Crear DataFrame con las imágenes y sus etiquetas
 df2 = pd.DataFrame({
     'imagen': data_images_test,
@@ -337,7 +361,7 @@ test_images, test_labels = aleatorio(test_images, test_labels)
 test_labels = to_categorical(test_labels)
 
 
-"""
+print("Exec point 1")
 
 from tensorflow.keras import layers, models
 
@@ -402,6 +426,8 @@ x = layers.Dense(256, activation='relu')(x)
 x = layers.Dropout(0.5)(x)
 outputs = layers.Dense(NUM_CLASSES, activation='softmax')(x)
 
+print("Exec point 2")
+
 model = models.Model(inputs, outputs)
 
 model.summary()
@@ -435,5 +461,5 @@ history = model.fit(
 )
 
 
-"""
+
 
