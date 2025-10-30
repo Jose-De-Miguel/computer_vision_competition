@@ -145,8 +145,9 @@ for i in range(len(file_list)):
 
     try:
         with Image.open(image_path) as img:
-            img.verify()  # Solo comprueba, no carga toda la imagen
-            image_array = np.array(img)
+                img.load()                # force pixel data into memory
+                img = img.convert('RGB')
+                image_array = np.array(img)
     
     except Exception as e:
         print("Error al verificar la imagen:", e)
@@ -208,8 +209,9 @@ for i in range(len(file_list)):
 
     try:
         with Image.open(image_path) as img:
-            img.verify()  # Solo comprueba, no carga toda la imagen
-            image_array = np.array(img)
+                img.load()                # force pixel data into memory
+                img = img.convert('RGB')
+                image_array = np.array(img)
     
     except Exception as e:
         print("Error al verificar la imagen:", e)
